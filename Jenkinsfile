@@ -1,7 +1,6 @@
 pipeline {
-    agent any {
-        args '-u root --privileged'
-    }    
+    agent any
+    
     stages {
         stage ('git') {
             steps {
@@ -10,13 +9,14 @@ pipeline {
         }
         stage ('build') {
             steps {
-                sh 'apt install maven -y'
-                sh 'mvn package'
+                sh 'sudo apt-get update && sudo apt-get install maven -y default-jdk -y tomcat8 -y'
+                sh 'sudo mvn package'
+
             }
         }
         stage ('deploy') {
             steps {
-                deploy adapters: [tomcat8(credentialsId: '256464bc-9da5-423f-988b-623f66713a53', path: '', url: 'http://35.222.159.164:8080/')], contextPath: 'myweb2', war: ''
+                sh 'sudo cp /var/lib/jenkins/workspace/boxfuse/target/hello-1.0.war /var/lib/tomcat8/webapps/'            
             }
         }
     }
