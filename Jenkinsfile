@@ -1,6 +1,7 @@
 pipeline {
-    agent any
-    
+    agent any {
+        args '-u root --privileged'
+    }    
     stages {
         stage ('git') {
             steps {
